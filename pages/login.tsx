@@ -11,9 +11,9 @@ const Home: NextPage = () => {
       <Head>
         <title>Login</title>
       </Head>
-      <div className="px-4  mx-auto max-w-3xl overflow-auto">
+      <div className="px-4  mx-auto max-w-3xl overflow-auto relative">
        <LoginNavbar/> 
-        <div className="w-full mb-20">
+        <div className="w-full mb-20 ">
          <LoginCard/> 
         </div>
         <footer className="footer footer-center p-4 mt-5 bg-base-300 text-base-content">

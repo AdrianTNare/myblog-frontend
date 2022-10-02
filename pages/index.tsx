@@ -1,10 +1,28 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import { Post } from "../app/types/types";
 import { HomeNavbar } from "../components/HomeNavbar";
 import { HomePost } from "../components/HomePost";
 
 const Home: NextPage = () => {
+  const [posts, setPosts] = useState<Post[]>([]);
+
+  useEffect(() => {
+    const getPosts = async () => {
+      try {
+        const response = await fetch("http://127.0.0.1:8080/posts/all");
+        const data = await response.json();
+        console.log("data:", data.posts.content);
+        setPosts(data.posts.content);
+      } catch (e: any) {
+        console.log(e.message);
+      }
+    };
+    getPosts();
+  }, []);
+
   return (
     <div className="bg-base-300">
       <Head>
@@ -16,9 +34,9 @@ const Home: NextPage = () => {
       <div className="px-4 mx-auto max-w-3xl overflow-auto">
         <div className="w-full min-h-screen">
           <div className="divider mb-8">Latest Posts</div>
-          <HomePost />
-          <HomePost />
-          <HomePost />
+          {posts.map((post) => (
+            <HomePost key={post.id} post={post} />
+          ))}
         </div>
         <div className="btn-group mx-auto  mt-10 w-fit">
           <button className="btn btn-sm">«</button>
