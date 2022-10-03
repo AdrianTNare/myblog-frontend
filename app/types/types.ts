@@ -1,11 +1,11 @@
 export type AuthView = "login" | "signup";
 
 export interface Post {
-  id: string;
+  id?: string;
   title: string;
   body: string;
-  dateCreated: string;
-  user: User;
+  dateCreated?: string;
+  user?: User;
 }
 
 export interface User {
@@ -21,9 +21,8 @@ export interface LoginInput {
   confirmPassword?: string;
 }
 
-
 export interface AlertDetails {
-    showAlert: boolean;
-    success: boolean;
-    text: string;
+  showAlert: boolean;
+  success: boolean;
+  text: string;
 }

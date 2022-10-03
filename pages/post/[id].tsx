@@ -1,13 +1,37 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
-import styles from "../styles/Home.module.css";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { defaultPost } from "../../app/fixtures/fixtures";
+import { Post } from "../../app/types/types";
 
 const Home: NextPage = () => {
+  const router = useRouter();
+  const { id } = router.query;
+
+  const [post, setPost] = useState<Post>(defaultPost);
+
+  useEffect(() => {
+    const getPost = async () => {
+      try {
+        const response = await fetch(`http://127.0.0.1:8080/posts/id?id=${id}`);
+        const data = await response.json();
+        console.log("data:", data); //Reove
+        setPost(data);
+      } catch (e: any) {
+        console.log(e.message);
+      }
+    };
+    if (id) {
+      getPost();
+    }
+  }, [id]);
+
   return (
     <div className="bg-base-300">
       <Head>
-        <title>Blog Home</title>
+        <title>Post</title>
       </Head>
       <div className="px-4 mx-auto max-w-3xl overflow-auto">
         <div className="navbar bg-base-100 rounded-lg mt-5 mb-8 shadow-xl ">
@@ -88,17 +112,12 @@ const Home: NextPage = () => {
         </div>
         <div className="w-full min-h-screen">
           <div className="w-full min-h-screen pt-14 pb-14 px-6 mb-8 bg-base-100">
-            <h1 className="mb-5 font-bold text-4xl">
-              This is the title of the post
-            </h1>
-            <h5 className="font-semibold"> Author Name</h5>
-            <h6 className="mb-10 font-light text-gray-500"> post date</h6>
-            <p className="mb-3">
-              This is the content of the post that i have just made up right
-              now. This content will be very long or short within the actual
-              post depending on what the user actually wanted to post when
-              he/she was writing the post.
-            </p>
+            <h1 className="mb-5 font-bold text-4xl">{post.title}</h1>
+            <h5 className="font-semibold">{post.user?.username}</h5>
+            <h6 className="mb-10 font-light text-gray-500">
+              {new Date(post.dateCreated ?? "").toLocaleDateString()}
+            </h6>
+            <p className="mb-3">{post.body}</p>
             <div className="flex mb-3 justify-end">
               <button className="btn btn-primary">Comment</button>
             </div>

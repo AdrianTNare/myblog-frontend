@@ -1,14 +1,23 @@
+import { HTMLAttributes } from "react";
+
 interface Props {
   success: boolean;
   text: string;
+  className?: string;
 }
 
-export const LoginAlert = ({ success, text }: Props) => {
+export const LoginAlert = ({
+  success,
+  text,
+  className,
+  ...otherProps
+}: Props & Omit<HTMLAttributes<HTMLDivElement>, "className">) => {
   const type = success ? "alert-success" : "alert-error";
 
   return (
     <div
-      className={` alert ${type} shadow-lg w-full max-w-xs p-3 top-28 absolute animate-bounce `}
+      className={` alert ${type} shadow-lg w-full max-w-xs p-3 absolute animate-bounce ${className}`}
+      {...otherProps}
     >
       <div>
         <svg

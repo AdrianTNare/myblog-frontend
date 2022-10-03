@@ -1,6 +1,9 @@
 import { useRouter } from "next/router";
 import { ChangeEvent, useEffect, useState } from "react";
-import { defaultAlertDetails, defaultLoginInput } from "../app/fixtures/fixtures";
+import {
+  defaultAlertDetails,
+  defaultLoginInput,
+} from "../app/fixtures/fixtures";
 import { AlertDetails, LoginInput } from "../app/types/types";
 import { LoginAlert } from "./LoginAlert";
 
@@ -53,14 +56,18 @@ export const LoginCardBody = () => {
       setAlertDetails({
         showAlert: true,
         success: false,
-        text: "Signup unsuccessful",
+        text: "Login unsuccessful",
       });
     }
   };
   return (
     <div className="card-body static">
       {alertDetails.showAlert && (
-        <LoginAlert success={alertDetails.success} text={alertDetails.text} />
+        <LoginAlert
+          success={alertDetails.success}
+          text={alertDetails.text}
+          className="top-28"
+        />
       )}
       <div className="form-control">
         <label className="label">
