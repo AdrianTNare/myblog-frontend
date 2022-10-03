@@ -1,4 +1,9 @@
-import { AlertDetails, LoginInput } from "../types/types";
+import { AlertDetails, LoginInput, Post } from "../types/types";
+
+export const defaultPost: Post = {
+  title: "",
+  body: "",
+};
 
 export const defaultAlertDetails: AlertDetails = {
   showAlert: false,
@@ -6,8 +11,7 @@ export const defaultAlertDetails: AlertDetails = {
   text: "Operation failed",
 };
 
-
 export const defaultLoginInput: LoginInput = {
   username: "",
-  password: ""
-}
+  password: "",
+};
