@@ -3,8 +3,9 @@ import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { defaultPost } from "../../app/fixtures/fixtures";
-import { Post } from "../../app/types/types";
+import { defaultAlertDetails, defaultPost } from "../../app/fixtures/fixtures";
+import { AlertDetails, Post } from "../../app/types/types";
+import { LoginAlert } from "../../components/LoginAlert";
 
 const Home: NextPage = () => {
   const router = useRouter();
@@ -12,15 +13,41 @@ const Home: NextPage = () => {
 
   const [post, setPost] = useState<Post>(defaultPost);
 
+  const [alertDetails, setAlertDetails] =
+    useState<AlertDetails>(defaultAlertDetails);
+
+  useEffect(() => {
+    let timeoutID: NodeJS.Timeout;
+    const hideAlert = async () => {
+      timeoutID = await setTimeout(() => {
+        setAlertDetails(defaultAlertDetails);
+      }, 2500);
+    };
+    if (alertDetails.showAlert) {
+      hideAlert();
+    }
+    return () => clearTimeout(timeoutID);
+  }, [alertDetails.showAlert]);
+
   useEffect(() => {
     const getPost = async () => {
       try {
         const response = await fetch(`http://127.0.0.1:8080/posts/id?id=${id}`);
+        if (!response.ok) throw Error("failed to get post");
         const data = await response.json();
         console.log("data:", data); //Reove
-        setPost(data);
+        if (Boolean(data)) {
+          setPost(data);
+        } else {
+          throw Error("post not found!");
+        }
       } catch (e: any) {
         console.log(e.message);
+        setAlertDetails({
+          showAlert: true,
+          success: false,
+          text: "Failed to load post",
+        });
       }
     };
     if (id) {
@@ -33,7 +60,7 @@ const Home: NextPage = () => {
       <Head>
         <title>Post</title>
       </Head>
-      <div className="px-4 mx-auto max-w-3xl overflow-auto">
+      <div className="px-4 mx-auto max-w-3xl overflow-auto relative">
         <div className="navbar bg-base-100 rounded-lg mt-5 mb-8 shadow-xl ">
           <div className="navbar-start">
             <div className="dropdown">
@@ -111,11 +138,20 @@ const Home: NextPage = () => {
           </div>
         </div>
         <div className="w-full min-h-screen">
+          {alertDetails.showAlert && (
+            <LoginAlert
+              success={alertDetails.success}
+              text={alertDetails.text}
+              className="left-0 right-0 mx-auto top-26"
+            />
+          )}
           <div className="w-full min-h-screen pt-14 pb-14 px-6 mb-8 bg-base-100">
             <h1 className="mb-5 font-bold text-4xl">{post.title}</h1>
             <h5 className="font-semibold">{post.user?.username}</h5>
             <h6 className="mb-10 font-light text-gray-500">
-              {new Date(post.dateCreated ?? "").toLocaleDateString()}
+              {post.dateCreated
+                ? new Date(post.dateCreated).toLocaleDateString()
+                : ""}
             </h6>
             <p className="mb-3">{post.body}</p>
             <div className="flex mb-3 justify-end">
