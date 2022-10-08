@@ -1,4 +1,10 @@
+import { useRouter } from "next/router";
+import { useAuth } from "../contexts/Auth";
+
 export const HomeNavbar = () => {
+  const { push } = useRouter();
+  const { user, logout } = useAuth();
+
   return (
     <div className="navbar bg-base-100 rounded-lg mb-16 shadow-xl ">
       <div className="navbar-start">
@@ -24,13 +30,15 @@ export const HomeNavbar = () => {
             className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52 z-50"
           >
             <li>
-              <a>My Blog</a>
+              <a onClick={() => push("/user/try")}>My Blog</a>
             </li>
+            {!user?.authToken && (
+              <li>
+                <a onClick={() => push("/login")}>Sign Up</a>
+              </li>
+            )}
             <li>
-              <a>Sign Up</a>
-            </li>
-            <li>
-              <a>New Post</a>
+              <a onClick={() => push("/newPost")}>New Post</a>
             </li>
           </ul>
         </div>
@@ -40,23 +48,48 @@ export const HomeNavbar = () => {
       </div>
       <div className="navbar-center">
         <a className="btn btn-ghost normal-case text-xl lg:hidden">Blog Home</a>
-        <ul className="menu menu-horizontal p-0 hidden lg:flex">
-          <li>
-            <a>My Blog</a>
-          </li>
-          <li>
-            <a>Sign Up</a>
-          </li>
-          <li>
-            <a>New Post</a>
-          </li>
-        </ul>
+        {!user?.authToken && (
+          <ul className="menu menu-horizontal p-0 hidden lg:flex">
+            <li>
+              <a onClick={() => push("/user/try")}>My Blog</a>
+            </li>
+            <li>
+              <a onClick={() => push("/login")}>Sign Up</a>
+            </li>
+            <li>
+              <a onClick={() => push("/newPost")}>New Post</a>
+            </li>
+          </ul>
+        )}
       </div>
       <div className="navbar-end">
-        <a className="btn btn-outline border-primary text-primary btn-sm mr-4 ">
-          Log In
-        </a>
-        {/* <a className="btn btn-ghost btn-sm mr-4 ">Log Out</a> */}
+        {user?.authToken ? (
+          <>
+            <ul className="menu menu-horizontal p-0 hidden lg:flex">
+              <li>
+                <a onClick={() => push("/user/try")}>My Blog</a>
+              </li>
+              {!user?.authToken && (
+                <li>
+                  <a onClick={() => push("/login")}>Sign Up</a>
+                </li>
+              )}
+              <li>
+                <a onClick={() => push("/newPost")}>New Post</a>
+              </li>
+            </ul>
+            <a className="btn btn-outline btn-sm mx-4" onClick={() => logout()}>
+              Log Out
+            </a>
+          </>
+        ) : (
+          <a
+            className="btn btn-outline border-primary text-primary btn-sm mx-4"
+            onClick={() => push("/login")}
+          >
+            Log In
+          </a>
+        )}
       </div>
     </div>
   );

@@ -15,7 +15,7 @@ export const HomePost = ({ post }: Props) => {
         </h6>
         <p>{post.body}</p>
         <div className="card-actions justify-end">
-          <button className="btn btn-primary">comment</button>
+          <button className="btn btn-primary btn-sm">comment</button>
         </div>
       </div>
     </div>
