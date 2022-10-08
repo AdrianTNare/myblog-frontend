@@ -3,10 +3,13 @@ import { LoginCardBody } from "./LoginCardBody";
 import { SignupCardBody } from "./SignupCardBody";
 
 export const LoginCard = () => {
-  const [loginView, setLoginView] = useState(false);
+  const [loginView, setLoginView] = useState(true);
   const handleTabChange = (mode: boolean) => {
     if (mode !== loginView) setLoginView(mode);
   };
+
+  // add a useEffect to check if the user clicked on log in or signup
+  // and change loginview accordingly
 
   return (
     <div className="mt-28 mx-auto w-full max-w-sm">

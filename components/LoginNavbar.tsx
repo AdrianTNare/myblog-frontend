@@ -1,4 +1,8 @@
+import { useRouter } from "next/router";
+import { VscHome } from "react-icons/vsc";
+
 export const LoginNavbar = () => {
+  const { push } = useRouter();
   return (
     <div className="navbar bg-base-100 rounded-lg mb-8 shadow-xl mt-5">
       <div className="navbar-start">
@@ -24,12 +28,12 @@ export const LoginNavbar = () => {
             className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52 z-50"
           >
             <li>
-              <a>My Blog</a>
+              <a onClick={() => push("/")}>Homepage</a>
             </li>
             <li>
-              <a>Sign Up</a>
+              <a onClick={() => push("/user/try")}>My Blog</a>
             </li>
-            <li>
+            <li onClick={() => push("/newPost")}>
               <a>New Post</a>
             </li>
           </ul>
@@ -42,10 +46,9 @@ export const LoginNavbar = () => {
         <a className="btn btn-ghost normal-case text-xl ">Login</a>
       </div>
       <div className="navbar-end">
-        <a className="btn btn-outline border-primary text-primary btn-sm mr-4 ">
-          Home
-        </a>
-        {/* <a className="btn btn-ghost btn-sm mr-4 ">Log Out</a> */}
+        <button className="btn btn-ghost btn-circle" onClick={() => push("/")}>
+          <VscHome className="text-2xl" />
+        </button>
       </div>
     </div>
   );

@@ -1,5 +1,11 @@
-import { AlertDetails, LoginInput, Post } from "../types/types";
+import { AlertDetails, LoginInput, Post, User } from "../types/types";
 
+export const defaultAuthUser: User = {
+  name: "",
+  surname: "",
+  username: "",
+  authToken: null,
+};
 export const defaultPost: Post = {
   title: "",
   body: "",

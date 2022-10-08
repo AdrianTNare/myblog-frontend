@@ -12,6 +12,7 @@ export interface User {
   name: string;
   surname: string;
   username: string;
+  authToken: string| null;
 }
 
 export interface LoginInput {

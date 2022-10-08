@@ -5,10 +5,12 @@ import {
   defaultLoginInput,
 } from "../app/fixtures/fixtures";
 import { AlertDetails, LoginInput } from "../app/types/types";
+import { useAuth } from "../contexts/Auth";
 import { LoginAlert } from "./LoginAlert";
 
 export const LoginCardBody = () => {
   const { push } = useRouter();
+  const { login } = useAuth();
 
   const [input, setInput] = useState<LoginInput>(defaultLoginInput);
 
@@ -38,25 +40,23 @@ export const LoginCardBody = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch("http://127.0.0.1:8080/login", {
-        method: "POST",
-        headers: { "Content-type": "application/json" },
-        body: JSON.stringify(input),
-      });
-      if (!response.ok) {
+      // const response = await fetch("http://127.0.0.1:8080/login", {
+      //   method: "POST",
+      //   headers: { "Content-type": "application/json" },
+      //   body: JSON.stringify(input),
+      // });
+      const { ok, message, status } = await login(input);
+      if (!ok) {
         window.localStorage.removeItem("token");
-        throw new Error("failed to login!");
+        throw new Error(message);
       }
-      const data = await response.json();
-      if (data.token) window.localStorage.setItem("token", data.token);
       push("/");
     } catch (e) {
       console.log(e);
-      window.localStorage.removeItem("token");
       setAlertDetails({
         showAlert: true,
         success: false,
-        text: "Login unsuccessful",
+        text: "Login failed",
       });
     }
   };
