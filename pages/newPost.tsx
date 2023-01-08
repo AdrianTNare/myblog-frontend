@@ -1,17 +1,16 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import { ChangeEvent, useEffect, useState } from "react";
-import { VscHome } from "react-icons/vsc";
 import { defaultAlertDetails, defaultPost } from "../app/fixtures/fixtures";
 import { AlertDetails } from "../app/types/types";
 import { LoginAlert } from "../components/LoginAlert";
+import { Navbar } from "../components/Navbar";
 import { useAuth } from "../contexts/Auth";
 
 const Home: NextPage = () => {
   const { push } = useRouter();
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const [postInput, setPostInput] = useState(defaultPost);
 
   const [alertDetails, setAlertDetails] =
@@ -20,7 +19,7 @@ const Home: NextPage = () => {
   useEffect(() => {
     let timeoutID: NodeJS.Timeout;
     const hideAlert = async () => {
-      timeoutID = await setTimeout(() => {
+      timeoutID = setTimeout(() => {
         setAlertDetails(defaultAlertDetails);
       }, 2500);
     };
@@ -79,56 +78,10 @@ const Home: NextPage = () => {
   return (
     <div className="bg-base-300">
       <Head>
-        <title>Blog Home</title>
+        <title>New Post</title>
       </Head>
       <div className="px-4 mx-auto max-w-3xl overflow-auto relative">
-        <div className="navbar bg-base-100 rounded-lg mt-5 mb-8 shadow-xl ">
-          <div className="navbar-start">
-            <div className="dropdown">
-              <label tabIndex={0} className="btn btn-ghost btn-circle">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M4 6h16M4 12h16M4 18h7"
-                  />
-                </svg>
-              </label>
-              <ul
-                tabIndex={0}
-                className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
-              >
-                <li>
-                  <a onClick={() => push("/user/try")}>My Blog</a>
-                </li>
-                <li>
-                  <a onClick={() => push("/newPost")}>New Post</a>
-                </li>
-                <li>
-                  <a onClick={() => logout()}>Log Out</a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div className="navbar-center">
-            <a className="btn btn-ghost normal-case text-xl">Blog Post</a>
-          </div>
-          <div className="navbar-end">
-            <button
-              className="btn btn-ghost btn-circle"
-              onClick={() => push("/")}
-            >
-              <VscHome className="text-2xl" />
-            </button>
-          </div>
-        </div>
+        <Navbar title="New Post" />
         <div className="w-full min-h-screen">
           {alertDetails.showAlert && (
             <LoginAlert

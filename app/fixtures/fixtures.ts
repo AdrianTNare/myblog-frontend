@@ -1,4 +1,4 @@
-import { AlertDetails, LoginInput, Post, User } from "../types/types";
+import { AlertDetails, Comment, LoginInput, Post, User } from "../types/types";
 
 export const defaultAuthUser: User = {
   name: "",
@@ -7,8 +7,19 @@ export const defaultAuthUser: User = {
   authToken: null,
 };
 export const defaultPost: Post = {
+  id: "",
   title: "",
   body: "",
+  dateCreated: new Date().toISOString(),
+  user: null,
+};
+
+export const defaultComment: Comment = {
+  id: "",
+  body: "",
+  dateCreated: new Date().toISOString(),
+  user: null,
+  post: null,
 };
 
 export const defaultAlertDetails: AlertDetails = {

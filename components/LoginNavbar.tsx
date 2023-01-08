@@ -1,8 +1,11 @@
 import { useRouter } from "next/router";
 import { VscHome } from "react-icons/vsc";
+import { useAuth } from "../contexts/Auth";
 
 export const LoginNavbar = () => {
   const { push } = useRouter();
+  const { user } = useAuth();
+
   return (
     <div className="navbar bg-base-100 rounded-lg mb-8 shadow-xl mt-5">
       <div className="navbar-start">
@@ -30,12 +33,16 @@ export const LoginNavbar = () => {
             <li>
               <a onClick={() => push("/")}>Homepage</a>
             </li>
-            <li>
-              <a onClick={() => push("/user/try")}>My Blog</a>
-            </li>
-            <li onClick={() => push("/newPost")}>
-              <a>New Post</a>
-            </li>
+            {user?.authToken && (
+              <>
+                <li>
+                  <a onClick={() => push("/user/try")}>My Blog</a>
+                </li>
+                <li onClick={() => push("/newPost")}>
+                  <a>New Post</a>
+                </li>
+              </>
+            )}
           </ul>
         </div>
         <a className="btn btn-ghost normal-case text-xl hidden lg:flex">

@@ -69,17 +69,15 @@ export const HomeNavbar = () => {
               <li>
                 <a onClick={() => push("/user/try")}>My Blog</a>
               </li>
-              {!user?.authToken && (
-                <li>
-                  <a onClick={() => push("/login")}>Sign Up</a>
-                </li>
-              )}
               <li>
-                <a onClick={() => push("/newPost")}>New Post</a>
+                <a onClick={() => logout()}>Log Out</a>
               </li>
             </ul>
-            <a className="btn btn-outline btn-sm mx-4" onClick={() => logout()}>
-              Log Out
+            <a
+              className="btn btn-outline border-primary text-primary btn-sm mx-4"
+              onClick={() => push("/newPost")}
+            >
+              New Post
             </a>
           </>
         ) : (
