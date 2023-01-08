@@ -1,67 +1,15 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import Image from "next/image";
-import { useRouter } from "next/router";
-import { VscHome } from "react-icons/vsc";
-import { useAuth } from "../../contexts/Auth";
-import styles from "../styles/Home.module.css";
+import { Navbar } from "../../components/Navbar";
 
 const Home: NextPage = () => {
-  const { push } = useRouter();
-  const { logout, user } = useAuth();
   return (
     <div className="bg-base-300">
       <Head>
         <title>Profile</title>
       </Head>
       <div className="px-4 mx-auto max-w-3xl overflow-auto">
-        <div className="navbar bg-base-100 rounded-lg mt-5 mb-8 shadow-xl ">
-          <div className="navbar-start">
-            <div className="dropdown">
-              <label tabIndex={0} className="btn btn-ghost btn-circle">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M4 6h16M4 12h16M4 18h7"
-                  />
-                </svg>
-              </label>
-              <ul
-                tabIndex={0}
-                className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
-              >
-                <li>
-                  <a onClick={() => push("/")}>Homepage</a>
-                </li>
-                <li>
-                  <a onClick={() => push("/newPost")}>New Post</a>
-                </li>
-                <li>
-                  <a onClick={() => logout()}>Log Out</a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div className="navbar-center">
-            <a className="btn btn-ghost normal-case text-xl">Blog Post</a>
-          </div>
-          <div className="navbar-end">
-            <button
-              className="btn btn-ghost btn-circle"
-              onClick={() => push("/")}
-            >
-              <VscHome className="text-2xl" />
-            </button>
-          </div>
-        </div>
+        <Navbar title="Profile" />
         <div className="w-full min-h-screen">
           <div className="w-full min-h-screen pt-14 pb-14 px-6 mb-8 bg-base-100">
             <h1 className="mb-5 font-bold text-4xl">Johnny Harris</h1>

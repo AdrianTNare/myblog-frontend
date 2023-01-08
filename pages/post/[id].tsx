@@ -1,28 +1,39 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { VscHome } from "react-icons/vsc";
 import { defaultAlertDetails, defaultPost } from "../../app/fixtures/fixtures";
-import { AlertDetails, Post } from "../../app/types/types";
+import { AlertDetails, Comment, Post } from "../../app/types/types";
+import { CommentInput } from "../../components/CommentInput";
 import { LoginAlert } from "../../components/LoginAlert";
+import { Navbar } from "../../components/Navbar";
+import { PostComment } from "../../components/PostComment";
 import { useAuth } from "../../contexts/Auth";
 
 const Home: NextPage = () => {
-  const { push, query } = useRouter();
-  const { logout } = useAuth();
+  const { query } = useRouter();
+  const { user } = useAuth();
   const { id } = query;
 
   const [post, setPost] = useState<Post>(defaultPost);
+
+  const [comments, setComments] = useState<Comment[]>([]);
+
+  const [showCommentInput, setShowCommentInput] = useState(false);
+
+  const [commentsPage, setCommentsPage] = useState(0);
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [hasMoreComments, setHasMoreComments] = useState(false);
 
   const [alertDetails, setAlertDetails] =
     useState<AlertDetails>(defaultAlertDetails);
 
   useEffect(() => {
     let timeoutID: NodeJS.Timeout;
-    const hideAlert = async () => {
-      timeoutID = await setTimeout(() => {
+    const hideAlert = () => {
+      timeoutID = setTimeout(() => {
         setAlertDetails(defaultAlertDetails);
       }, 2500);
     };
@@ -38,7 +49,6 @@ const Home: NextPage = () => {
         const response = await fetch(`http://127.0.0.1:8080/posts/id?id=${id}`);
         if (!response.ok) throw Error("failed to get post");
         const data = await response.json();
-        console.log("data:", data); //Reove
         if (Boolean(data)) {
           setPost(data);
         } else {
@@ -58,59 +68,64 @@ const Home: NextPage = () => {
     }
   }, [id]);
 
+  const getComments = async (reset: boolean = false) => {
+    setIsLoading(true);
+    reset ? setCommentsPage(0) : setCommentsPage((current) => current + 1);
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:8080/comments/post?id=${id}&page=${commentsPage}`
+      );
+      if (!response.ok) throw Error("failed to get comments");
+      const data = await response.json();
+      if (!Boolean(data)) throw Error("comments not found!");
+
+      setComments((currentComments) =>
+        reset
+          ? data.comments.content
+          : [...currentComments, ...data.comments.content]
+      );
+      setHasMoreComments(data.hasNext);
+    } catch (e: any) {
+      console.log(e.message);
+      setAlertDetails({
+        showAlert: true,
+        success: false,
+        text: "Failed to load comments",
+      });
+    }
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    if (id) {
+      getComments(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
+
+  const handleShowCommentInput = () => {
+    if (!user?.authToken) {
+      setAlertDetails({
+        showAlert: true,
+        success: false,
+        text: "Please login first",
+      });
+      return;
+    }
+    setShowCommentInput(true);
+  };
+
+  const handleHideCommentInput = () => {
+    setShowCommentInput(false);
+  };
+
   return (
     <div className="bg-base-300">
       <Head>
         <title>Post</title>
       </Head>
       <div className="px-4 mx-auto max-w-3xl overflow-auto relative">
-        <div className="navbar bg-base-100 rounded-lg mt-5 mb-8 shadow-xl ">
-          <div className="navbar-start">
-            <div className="dropdown">
-              <label tabIndex={0} className="btn btn-ghost btn-circle">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M4 6h16M4 12h16M4 18h7"
-                  />
-                </svg>
-              </label>
-              <ul
-                tabIndex={0}
-                className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
-              >
-                <li>
-                  <a onClick={() => push("/user/try")}>My Blog</a>
-                </li>
-                <li>
-                  <a onClick={() => push("/newPost")}>New Post</a>
-                </li>
-                <li>
-                  <a onClick={() => logout()}>Log Out</a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div className="navbar-center">
-            <a className="btn btn-ghost normal-case text-xl">Blog Post</a>
-          </div>
-          <div className="navbar-end">
-            <button
-              className="btn btn-ghost btn-circle"
-              onClick={() => push("/")}
-            >
-              <VscHome className="text-2xl" />
-            </button>
-          </div>
-        </div>
+        <Navbar title="Post" />
         <div className="w-full min-h-screen">
           {alertDetails.showAlert && (
             <LoginAlert
@@ -129,43 +144,36 @@ const Home: NextPage = () => {
             </h6>
             <p className="mb-3">{post.body}</p>
             <div className="flex mb-3 justify-end">
-              <button className="btn btn-primary">Comment</button>
+              {!showCommentInput && (
+                <button
+                  className="btn btn-primary"
+                  onClick={handleShowCommentInput}
+                >
+                  Comment
+                </button>
+              )}
             </div>
-            <h3 className="mb-7 font-bold text-xl">Comments</h3>
-            <div className="mb-4">
-              <textarea
-                className="w-full mb-3 textarea textarea-primary"
-                placeholder="Add Comment..."
-              ></textarea>
-              <div className="flex justify-end gap-3">
-                <button className="btn btn-ghost">Cancel</button>
-                <button className="btn btn-primary">Submit</button>
-              </div>
-            </div>
-            <div className="mb-4">
-              <div className="flex mb-2 gap-4">
-                <h5 className="font-semibold">Author</h5>
-                <h6 className="font-light text-gray-500">date</h6>
-              </div>
-              <div className="inline-block px-4 py-2 border border-slate-300 rounded-md bg-base-200">
-                <p>This is the content of the comment</p>
-              </div>
-            </div>
-            <div className="mb-4">
-              <div className="flex mb-2 gap-4">
-                <h5 className="font-semibold">Author</h5>
-                <h6 className="font-light text-gray-500">date</h6>
-              </div>
-              <div className="inline-block px-4 py-2 border border-slate-300 rounded-md bg-base-200">
-                <p>
-                  This is the content of the comment that the other users would
-                  have left under the current post
-                </p>
-              </div>
+            <h3 className="my-7 font-bold text-xl">Comments</h3>
+            {showCommentInput && (
+              <CommentInput
+                postId={id as string | undefined}
+                getComments={getComments}
+                setAlertDetails={setAlertDetails}
+                handleHideCommentInput={handleHideCommentInput}
+              />
+            )}
+            <div>
+              {comments.map((comment) => (
+                <PostComment key={comment.id} comment={comment} />
+              ))}
             </div>
             <div className="flex mt-8 justify-center">
-              <button className="btn btn-outline btn-sm loading">
-                loading
+              <button
+                className={`btn btn-outline btn-sm ${isLoading && "loading"}`}
+                onClick={() => getComments()}
+                disabled={!hasMoreComments}
+              >
+                {isLoading ? "loading" : "Load more ..."}
               </button>
             </div>
           </div>

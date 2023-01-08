@@ -1,4 +1,3 @@
-import { useRouter } from "next/router";
 import { ChangeEvent, useEffect, useState } from "react";
 import {
   defaultAlertDetails,
@@ -7,15 +6,7 @@ import {
 import { AlertDetails, LoginInput } from "../app/types/types";
 import { LoginAlert } from "./LoginAlert";
 
-interface Props {
-  input: LoginInput;
-  handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  handleSubmit: () => void;
-}
-
 export const SignupCardBody = () => {
-  const { push } = useRouter();
-
   const [input, setInput] = useState<LoginInput>({
     ...defaultLoginInput,
     email: "",
@@ -28,7 +19,7 @@ export const SignupCardBody = () => {
   useEffect(() => {
     let timeoutID: NodeJS.Timeout;
     const hideAlert = async () => {
-      timeoutID = await setTimeout(() => {
+      timeoutID = setTimeout(() => {
         setAlertDetails(defaultAlertDetails);
       }, 2500);
     };
@@ -70,6 +61,7 @@ export const SignupCardBody = () => {
       });
     }
   };
+
   return (
     <div className="card-body static">
       {alertDetails.showAlert && (
@@ -133,7 +125,7 @@ export const SignupCardBody = () => {
       </div>
       <div className="form-control mt-6">
         <button className="btn btn-primary" onClick={handleSubmit}>
-          Login
+          Sign Up
         </button>
       </div>
     </div>

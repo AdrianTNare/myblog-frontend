@@ -1,18 +1,28 @@
 export type AuthView = "login" | "signup";
 
+export type LinkView = "user" | "newPost" | "post";
+
 export interface Post {
-  id?: string;
+  id: string;
   title: string;
   body: string;
-  dateCreated?: string;
-  user?: User;
+  dateCreated: string;
+  user: User | null;
+}
+
+export interface Comment {
+  id: string;
+  body: string;
+  dateCreated: string;
+  user: User | null;
+  post: Post | null;
 }
 
 export interface User {
   name: string;
   surname: string;
   username: string;
-  authToken: string| null;
+  authToken: string | null;
 }
 
 export interface LoginInput {
