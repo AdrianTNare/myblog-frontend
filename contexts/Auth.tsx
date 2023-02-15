@@ -94,9 +94,7 @@ export const useAuth = () => {
       const { token } = data;
 
       if (!response.ok || !token) {
-        throw new Error("failed to login!", {
-          cause: { ok: response.ok, status: response.status },
-        });
+        throw new Error("failed to login!");
       }
       const updatedUser: User = {
         ...defaultAuthUser,
