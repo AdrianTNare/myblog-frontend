@@ -2,6 +2,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { appConfig } from "../app/config";
 import { Post } from "../app/types/types";
 import { HomeNavbar } from "../components/HomeNavbar";
 import { HomePost } from "../components/HomePost";
@@ -12,7 +13,7 @@ const Home: NextPage = () => {
   useEffect(() => {
     const getPosts = async () => {
       try {
-        const response = await fetch("http://127.0.0.1:8080/posts/all");
+        const response = await fetch(`${appConfig.backendDomain}/posts/all`);
         const data = await response.json();
         console.log("data:", data.posts.content);
         setPosts(data.posts.content);

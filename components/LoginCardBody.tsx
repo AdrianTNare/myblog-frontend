@@ -20,7 +20,7 @@ export const LoginCardBody = () => {
   useEffect(() => {
     let timeoutID: NodeJS.Timeout;
     const hideAlert = async () => {
-      timeoutID = await setTimeout(() => {
+      timeoutID = setTimeout(() => {
         setAlertDetails(defaultAlertDetails);
       }, 2500);
     };
@@ -40,7 +40,7 @@ export const LoginCardBody = () => {
 
   const handleSubmit = async () => {
     try {
-      // const response = await fetch("http://127.0.0.1:8080/login", {
+      // const response = await fetch("${appConfig.backendDomain}/login", {
       //   method: "POST",
       //   headers: { "Content-type": "application/json" },
       //   body: JSON.stringify(input),

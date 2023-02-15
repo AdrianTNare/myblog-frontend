@@ -1,4 +1,5 @@
 import { ChangeEvent, useEffect, useState } from "react";
+import { appConfig } from "../app/config";
 import {
   defaultAlertDetails,
   defaultLoginInput,
@@ -39,11 +40,14 @@ export const SignupCardBody = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch("http://127.0.0.1:8080/users/register", {
-        method: "POST",
-        headers: { "Content-type": "application/json" },
-        body: JSON.stringify(input),
-      });
+      const response = await fetch(
+        `${appConfig.backendDomain}/users/register`,
+        {
+          method: "POST",
+          headers: { "Content-type": "application/json" },
+          body: JSON.stringify(input),
+        }
+      );
       if (!response.ok) {
         throw new Error("failed to signup!");
       }

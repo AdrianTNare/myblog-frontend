@@ -2,6 +2,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { appConfig } from "../../app/config";
 import { defaultAlertDetails, defaultPost } from "../../app/fixtures/fixtures";
 import { AlertDetails, Comment, Post } from "../../app/types/types";
 import { CommentInput } from "../../components/CommentInput";
@@ -21,7 +22,7 @@ const Home: NextPage = () => {
 
   const [showCommentInput, setShowCommentInput] = useState(false);
 
-  const [commentsPage, setCommentsPage] = useState(0);
+  const [commentsPage, setCommentsPage] = useState(1);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -46,7 +47,9 @@ const Home: NextPage = () => {
   useEffect(() => {
     const getPost = async () => {
       try {
-        const response = await fetch(`http://127.0.0.1:8080/posts/id?id=${id}`);
+        const response = await fetch(
+          `${appConfig.backendDomain}/posts/id?id=${id}`
+        );
         if (!response.ok) throw Error("failed to get post");
         const data = await response.json();
         if (Boolean(data)) {
@@ -70,10 +73,14 @@ const Home: NextPage = () => {
 
   const getComments = async (reset: boolean = false) => {
     setIsLoading(true);
-    reset ? setCommentsPage(0) : setCommentsPage((current) => current + 1);
+    let pageToRequest = 1;
+    if (!reset) {
+      pageToRequest = commentsPage + 1;
+      setCommentsPage((current) => current + 1);
+    }
     try {
       const response = await fetch(
-        `http://127.0.0.1:8080/comments/post?id=${id}&page=${commentsPage}`
+        `${appConfig.backendDomain}/comments/post?id=${id}&page=${pageToRequest}`
       );
       if (!response.ok) throw Error("failed to get comments");
       const data = await response.json();
