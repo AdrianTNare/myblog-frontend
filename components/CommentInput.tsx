@@ -1,4 +1,5 @@
 import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
+import { appConfig } from "../app/config";
 import { defaultComment } from "../app/fixtures/fixtures";
 import { AlertDetails } from "../app/types/types";
 import { useAuth } from "../contexts/Auth";
@@ -38,7 +39,7 @@ export const CommentInput = ({
       if (!user?.authToken) throw Error("you are not logged in!");
       if (!postId) throw Error("postid unavailable");
       const response = await fetch(
-        `http://127.0.0.1:8080/comments/create?postId=${postId}`,
+        `${appConfig.backendDomain}/comments/create?postId=${postId}`,
         {
           method: "POST",
           headers: {

@@ -6,6 +6,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import { appConfig } from "../app/config";
 import { defaultAuthUser } from "../app/fixtures/fixtures";
 import { LoginInput, User } from "../app/types/types";
 
@@ -84,7 +85,7 @@ export const useAuth = () => {
 
   const login = async (LoginInput: LoginInput): Promise<APIResponse> => {
     try {
-      const response = await fetch("http://127.0.0.1:8080/login", {
+      const response = await fetch(`${appConfig.backendDomain}/login`, {
         method: "POST",
         headers: { "Content-type": "application/json" },
         body: JSON.stringify(LoginInput),

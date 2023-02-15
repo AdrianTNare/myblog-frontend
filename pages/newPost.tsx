@@ -2,6 +2,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { ChangeEvent, useEffect, useState } from "react";
+import { appConfig } from "../app/config";
 import { defaultAlertDetails, defaultPost } from "../app/fixtures/fixtures";
 import { AlertDetails } from "../app/types/types";
 import { LoginAlert } from "../components/LoginAlert";
@@ -46,7 +47,7 @@ const Home: NextPage = () => {
   const handleSubmit = async () => {
     try {
       if (!user?.authToken) throw Error("you are not logged in!");
-      const response = await fetch("http://127.0.0.1:8080/posts/create", {
+      const response = await fetch(`${appConfig.backendDomain}/posts/create`, {
         method: "POST",
         headers: {
           "Content-type": "application/json",
