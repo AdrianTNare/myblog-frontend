@@ -11,7 +11,7 @@ export const HomePost = ({ post }: Props) => {
     <div className="card w-full max-w-2xl bg-base-100 shadow-xl mx-auto mb-4 rounded-md">
       <div className="card-body gap-0 px-4 pb-5">
         <h2
-          className="card-title mb-2"
+          className="card-title mb-2 cursor-pointer"
           onClick={() => push(`/post/${post.id}`)}
         >
           {post.title
